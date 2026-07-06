@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: transparent;
+      overflow: hidden;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+    #count {
+      font-family: 'VT323', monospace;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      color: #b8d4f0;
+      line-height: 1;
+      white-space: nowrap;
+      transition: opacity 0.3s;
+    }
+    #count.loading { opacity: 0.3; }
+  </style>
+</head>
+<body>
+  <span id="count" class="loading">------</span>
+
+  <script type="module">
+    import { initializeApp }    from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, increment }
+      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    // TODO: replace with your Firebase project config
+    const firebaseConfig = {
+      apiKey:            "YOUR_API_KEY",
+      authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId:         "YOUR_PROJECT_ID",
+      storageBucket:     "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId:             "YOUR_APP_ID"
+    };
+
+    const app        = initializeApp(firebaseConfig);
+    const db         = getFirestore(app);
+    const counterRef = doc(db, 'counters', 'visitors');
+    const countEl    = document.getElementById('count');
+
+    async function run() {
+      try {
+        // Only count once per browser session (prevents refresh spam)
+        if (!sessionStorage.getItem('visit_counted')) {
+          try {
+            await updateDoc(counterRef, { count: increment(1) });
+          } catch (e) {
+            // Document doesn't exist yet — create it
+            await setDoc(counterRef, { count: 1 });
+          }
+          sessionStorage.setItem('visit_counted', '1');
+        }
+
+        const snap = await getDoc(counterRef);
+        if (snap.exists()) {
+          const n = snap.data().count;
+          countEl.textContent = String(n).padStart(6, '0');
+          countEl.classList.remove('loading');
+        }
+      } catch (err) {
+        console.error('Counter error:', err);
+        countEl.textContent = 'ERR';
+        countEl.classList.remove('loading');
+      }
+    }
+
+    run();
+  </script>
+</body>
+</html>

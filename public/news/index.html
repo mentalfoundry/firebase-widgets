@@ -61,37 +61,21 @@
 <body>
   <div id="widget">
     <div class="item">
-      <span class="label">WORLD</span>
-      <a id="world-link" class="loading" href="#" target="_blank" rel="noopener">loading...</a>
+      <span class="label">HN #1</span>
+      <a id="hn1-link" class="loading" href="#" target="_blank" rel="noopener">loading...</a>
     </div>
     <div class="item">
-      <span class="label">TECH</span>
-      <a id="tech-link" class="loading" href="#" target="_blank" rel="noopener">loading...</a>
+      <span class="label">HN #2</span>
+      <a id="hn2-link" class="loading" href="#" target="_blank" rel="noopener">loading...</a>
     </div>
   </div>
 
   <script type="module">
-    async function loadWorld() {
-      const el = document.getElementById('world-link');
-      try {
-        const res  = await fetch('https://www.reddit.com/r/worldnews/top.json?limit=1&t=day&raw_json=1');
-        const json = await res.json();
-        const post = json.data.children[0].data;
-        el.textContent = post.title;
-        el.href = post.url;
-        el.classList.remove('loading');
-      } catch {
-        el.textContent = 'unavailable';
-        el.classList.add('error');
-        el.classList.remove('loading');
-      }
-    }
-
-    async function loadTech() {
-      const el = document.getElementById('tech-link');
+    async function loadHN(index, elId) {
+      const el = document.getElementById(elId);
       try {
         const ids  = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json').then(r => r.json());
-        const item = await fetch(`https://hacker-news.firebaseio.com/v0/item/${ids[0]}.json`).then(r => r.json());
+        const item = await fetch(`https://hacker-news.firebaseio.com/v0/item/${ids[index]}.json`).then(r => r.json());
         el.textContent = item.title;
         el.href = item.url || `https://news.ycombinator.com/item?id=${item.id}`;
         el.classList.remove('loading');
@@ -102,8 +86,8 @@
       }
     }
 
-    loadWorld();
-    loadTech();
+    loadHN(0, 'hn1-link');
+    loadHN(1, 'hn2-link');
   </script>
 </body>
 </html>

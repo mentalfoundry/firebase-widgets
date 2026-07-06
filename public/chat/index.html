@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: transparent;
+      font-family: 'VT323', monospace;
+      font-size: 14px;
+      color: #b8d4f0;
+    }
+
+    #chat {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      border: 1px solid rgba(184, 212, 240, 0.2);
+    }
+
+    #messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .msg {
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .msg .time {
+      opacity: 0.35;
+      margin-right: 6px;
+    }
+
+    .msg .user {
+      color: #7eb8e8;
+      margin-right: 4px;
+    }
+
+    #input-row {
+      display: flex;
+      gap: 4px;
+      padding: 6px 8px;
+      border-top: 1px solid rgba(184, 212, 240, 0.2);
+    }
+
+    input, button {
+      font-family: 'VT323', monospace;
+      font-size: 14px;
+      background: rgba(184, 212, 240, 0.05);
+      border: 1px solid rgba(184, 212, 240, 0.25);
+      color: #b8d4f0;
+      padding: 3px 6px;
+      outline: none;
+    }
+
+    input::placeholder { opacity: 0.35; }
+    input:focus { border-color: rgba(184, 212, 240, 0.6); }
+
+    #username-input { width: 90px; flex-shrink: 0; }
+    #message-input { flex: 1; min-width: 0; }
+
+    button {
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      padding: 3px 10px;
+      flex-shrink: 0;
+    }
+
+    button:hover:not(:disabled) { background: rgba(184, 212, 240, 0.12); }
+    button:disabled { opacity: 0.35; cursor: default; }
+
+    #messages::-webkit-scrollbar { width: 3px; }
+    #messages::-webkit-scrollbar-track { background: transparent; }
+    #messages::-webkit-scrollbar-thumb { background: rgba(184, 212, 240, 0.2); }
+  </style>
+</head>
+<body>
+  <div id="chat">
+    <div id="messages"></div>
+    <div id="input-row">
+      <input id="username-input" placeholder="username" maxlength="30" autocomplete="off" spellcheck="false">
+      <input id="message-input" placeholder="message..." maxlength="500" autocomplete="off">
+      <button id="send-btn">POST</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getFirestore, collection, query, orderBy, limitToLast, onSnapshot, addDoc, serverTimestamp }
+      from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey:            "AIzaSyBjXZMCTEd7yyWzkhzlvwZmiJbPN6lP88Q",
+      authDomain:        "daznet.firebaseapp.com",
+      projectId:         "daznet",
+      storageBucket:     "daznet.appspot.com",
+      messagingSenderId: "253374160314",
+      appId:             "1:253374160314:web:098d00c868f0ff1b991183"
+    };
+
+    const app        = initializeApp(firebaseConfig);
+    const db         = getFirestore(app);
+    const messagesEl = document.getElementById('messages');
+    const usernameEl = document.getElementById('username-input');
+    const messageEl  = document.getElementById('message-input');
+    const sendBtn    = document.getElementById('send-btn');
+
+    usernameEl.value = localStorage.getItem('chat_username') || '';
+
+    const q = query(collection(db, 'chat'), orderBy('timestamp', 'asc'), limitToLast(150));
+
+    onSnapshot(q, (snap) => {
+      const atBottom = messagesEl.scrollHeight - messagesEl.scrollTop <= messagesEl.clientHeight + 20;
+      messagesEl.innerHTML = '';
+      snap.forEach(docSnap => {
+        const { username, text, timestamp } = docSnap.data();
+        const time = timestamp
+          ? new Date(timestamp.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          : '--:--';
+        const div = document.createElement('div');
+        div.className = 'msg';
+        div.innerHTML = `<span class="time">${time}</span><span class="user">${esc(username)}:</span>${esc(text)}`;
+        messagesEl.appendChild(div);
+      });
+      if (atBottom) messagesEl.scrollTop = messagesEl.scrollHeight;
+    });
+
+    async function post() {
+      const username = usernameEl.value.trim();
+      const text     = messageEl.value.trim();
+      if (!username || !text) return;
+
+      sendBtn.disabled = true;
+      localStorage.setItem('chat_username', username);
+
+      try {
+        await addDoc(collection(db, 'chat'), { username, text, timestamp: serverTimestamp() });
+        messageEl.value = '';
+      } finally {
+        sendBtn.disabled = false;
+        messageEl.focus();
+      }
+    }
+
+    sendBtn.addEventListener('click', post);
+    messageEl.addEventListener('keydown', e => { if (e.key === 'Enter') post(); });
+
+    function esc(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+  </script>
+</body>
+</html>

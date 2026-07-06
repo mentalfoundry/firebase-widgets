@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: transparent;
+      font-family: 'VT323', monospace;
+      font-size: 14px;
+      color: #b8d4f0;
+    }
+
+    #widget {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+      height: 100%;
+      padding: 10px 12px;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(184, 212, 240, 0.2);
+    }
+
+    .item {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      line-height: 1.4;
+      min-width: 0;
+    }
+
+    .label {
+      flex-shrink: 0;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      opacity: 0.45;
+    }
+
+    a {
+      color: #b8d4f0;
+      text-decoration: none;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    a:hover { text-decoration: underline; text-decoration-color: rgba(184, 212, 240, 0.5); }
+
+    .loading { opacity: 0.3; }
+    .error   { opacity: 0.4; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div id="widget">
+    <div class="item">
+      <span class="label">WORLD</span>
+      <a id="world-link" class="loading" href="#" target="_blank" rel="noopener">loading...</a>
+    </div>
+    <div class="item">
+      <span class="label">TECH</span>
+      <a id="tech-link" class="loading" href="#" target="_blank" rel="noopener">loading...</a>
+    </div>
+  </div>
+
+  <script type="module">
+    async function loadWorld() {
+      const el = document.getElementById('world-link');
+      try {
+        const res  = await fetch('https://www.reddit.com/r/worldnews/top.json?limit=1&t=day&raw_json=1');
+        const json = await res.json();
+        const post = json.data.children[0].data;
+        el.textContent = post.title;
+        el.href = post.url;
+        el.classList.remove('loading');
+      } catch {
+        el.textContent = 'unavailable';
+        el.classList.add('error');
+        el.classList.remove('loading');
+      }
+    }
+
+    async function loadTech() {
+      const el = document.getElementById('tech-link');
+      try {
+        const ids  = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json').then(r => r.json());
+        const item = await fetch(`https://hacker-news.firebaseio.com/v0/item/${ids[0]}.json`).then(r => r.json());
+        el.textContent = item.title;
+        el.href = item.url || `https://news.ycombinator.com/item?id=${item.id}`;
+        el.classList.remove('loading');
+      } catch {
+        el.textContent = 'unavailable';
+        el.classList.add('error');
+        el.classList.remove('loading');
+      }
+    }
+
+    loadWorld();
+    loadTech();
+  </script>
+</body>
+</html>

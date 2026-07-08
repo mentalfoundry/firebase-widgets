@@ -53,7 +53,9 @@ const firebaseConfig = {
 };
 ```
 
-> **Note:** Firebase web API keys are safe to commit — they are public identifiers, not secrets. Security is enforced by Firestore rules. See [Firebase docs](https://firebase.google.com/docs/projects/api-keys) for details. It's good practice to restrict the key to your domain and Firebase APIs in [Google Cloud Console](https://console.cloud.google.com) → APIs & Services → Credentials.
+> **Note:** Firebase web API keys are safe to commit — they are public identifiers, not secrets. Security is enforced by Firestore rules. See [Firebase docs](https://firebase.google.com/docs/projects/api-keys) for details.
+>
+> **Important:** Restrict your API key in [Google Cloud Console](https://console.cloud.google.com) → APIs & Services → Credentials. Allow only **Firebase Installations API** and **Cloud Firestore API**. Make sure the **Generative Language API (Gemini)** is not included — if left unrestricted, an exposed key could be used to run Gemini requests billed to your account.
 
 ### 4. Deploy via GitHub Actions (no CLI required)
 

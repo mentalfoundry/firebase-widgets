@@ -4,6 +4,16 @@ service cloud.firestore {
     match /counters/visitors {
       allow read, write: if true;
     }
+    match /guestbook/{entryId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['name', 'message', 'timestamp'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 50
+        && request.resource.data.message is string
+        && request.resource.data.message.size() > 0
+        && request.resource.data.message.size() <= 500;
+    }
     match /chat/{messageId} {
       allow read: if true;
       allow create: if request.resource.data.keys().hasAll(['username', 'text', 'timestamp'])

@@ -4,6 +4,8 @@ A toolkit of embeddable, real-time widgets for static sites — powered by Fireb
 
 No build step. No framework. Just HTML, vanilla JS, and Firebase.
 
+Everything here runs on the **Firebase free tier (Spark plan)** — no credit card required. The only services used are Firebase Hosting and Firestore, both of which have generous free quotas well beyond what a personal site will consume. Deployment is handled by GitHub Actions, which is also free for public repos.
+
 ---
 
 ## Widgets

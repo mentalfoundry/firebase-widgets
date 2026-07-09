@@ -7,22 +7,75 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg:           rgba(0, 0, 0, 0.82);
+      --border:       rgba(184, 212, 240, 0.2);
+      --border-focus: rgba(184, 212, 240, 0.6);
+      --text:         #b8d4f0;
+      --accent:       #7eb8e8;
+      --input-bg:     rgba(184, 212, 240, 0.05);
+      --input-border: rgba(184, 212, 240, 0.25);
+      --btn-hover:    rgba(184, 212, 240, 0.12);
+      --scrollbar:    rgba(184, 212, 240, 0.2);
+      --font:         'VT323', monospace;
+      --size:         14px;
+    }
+    [data-theme="paper"] {
+      --bg:           rgba(250, 247, 242, 0.96);
+      --border:       rgba(0, 0, 0, 0.1);
+      --border-focus: rgba(0, 0, 0, 0.4);
+      --text:         #2a2a2a;
+      --accent:       #5a3e28;
+      --input-bg:     rgba(0, 0, 0, 0.03);
+      --input-border: rgba(0, 0, 0, 0.15);
+      --btn-hover:    rgba(0, 0, 0, 0.06);
+      --scrollbar:    rgba(0, 0, 0, 0.15);
+      --font:         Georgia, serif;
+      --size:         13px;
+    }
+    [data-theme="dusk"] {
+      --bg:           rgba(18, 10, 28, 0.88);
+      --border:       rgba(200, 150, 255, 0.2);
+      --border-focus: rgba(200, 150, 255, 0.6);
+      --text:         #ddc8f5;
+      --accent:       #c084fc;
+      --input-bg:     rgba(200, 150, 255, 0.05);
+      --input-border: rgba(200, 150, 255, 0.25);
+      --btn-hover:    rgba(200, 150, 255, 0.12);
+      --scrollbar:    rgba(200, 150, 255, 0.2);
+      --font:         system-ui, sans-serif;
+      --size:         13px;
+    }
+    [data-theme="moss"] {
+      --bg:           rgba(8, 18, 10, 0.88);
+      --border:       rgba(140, 200, 120, 0.2);
+      --border-focus: rgba(140, 200, 120, 0.6);
+      --text:         #a8c8a0;
+      --accent:       #6db87a;
+      --input-bg:     rgba(140, 200, 120, 0.05);
+      --input-border: rgba(140, 200, 120, 0.25);
+      --btn-hover:    rgba(140, 200, 120, 0.12);
+      --scrollbar:    rgba(140, 200, 120, 0.2);
+      --font:         system-ui, sans-serif;
+      --size:         13px;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
       height: 100%;
       background: transparent;
-      font-family: 'VT323', monospace;
-      font-size: 14px;
-      color: #b8d4f0;
+      font-family: var(--font);
+      font-size: var(--size);
+      color: var(--text);
     }
 
     #chat {
       display: flex;
       flex-direction: column;
       height: 100%;
-      background: rgba(0, 0, 0, 0.82);
-      border: 1px solid rgba(184, 212, 240, 0.2);
+      background: var(--bg);
+      border: 1px solid var(--border);
     }
 
     #messages {
@@ -34,43 +87,32 @@
       gap: 3px;
     }
 
-    .msg {
-      line-height: 1.4;
-      word-break: break-word;
-    }
-
-    .msg .time {
-      opacity: 0.35;
-      margin-right: 6px;
-    }
-
-    .msg .user {
-      color: #7eb8e8;
-      margin-right: 4px;
-    }
+    .msg { line-height: 1.4; word-break: break-word; }
+    .msg .time { opacity: 0.35; margin-right: 6px; }
+    .msg .user { color: var(--accent); margin-right: 4px; }
 
     #input-row {
       display: flex;
       gap: 4px;
       padding: 6px 8px;
-      border-top: 1px solid rgba(184, 212, 240, 0.2);
+      border-top: 1px solid var(--border);
     }
 
     input, button {
-      font-family: 'VT323', monospace;
-      font-size: 14px;
-      background: rgba(184, 212, 240, 0.05);
-      border: 1px solid rgba(184, 212, 240, 0.25);
-      color: #b8d4f0;
+      font-family: var(--font);
+      font-size: var(--size);
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      color: var(--text);
       padding: 3px 6px;
       outline: none;
     }
 
     input::placeholder { opacity: 0.35; }
-    input:focus { border-color: rgba(184, 212, 240, 0.6); }
+    input:focus { border-color: var(--border-focus); }
 
     #username-input { width: 90px; flex-shrink: 0; }
-    #message-input { flex: 1; min-width: 0; }
+    #message-input  { flex: 1; min-width: 0; }
 
     button {
       cursor: pointer;
@@ -79,12 +121,12 @@
       flex-shrink: 0;
     }
 
-    button:hover:not(:disabled) { background: rgba(184, 212, 240, 0.12); }
+    button:hover:not(:disabled) { background: var(--btn-hover); }
     button:disabled { opacity: 0.35; cursor: default; }
 
-    #messages::-webkit-scrollbar { width: 3px; }
+    #messages::-webkit-scrollbar       { width: 3px; }
     #messages::-webkit-scrollbar-track { background: transparent; }
-    #messages::-webkit-scrollbar-thumb { background: rgba(184, 212, 240, 0.2); }
+    #messages::-webkit-scrollbar-thumb { background: var(--scrollbar); }
   </style>
 </head>
 <body>
@@ -101,6 +143,8 @@
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
     import { getFirestore, collection, query, orderBy, limitToLast, onSnapshot, addDoc, serverTimestamp }
       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    document.documentElement.dataset.theme = new URLSearchParams(location.search).get('theme') || 'cyber';
 
     const firebaseConfig = {
       apiKey:            "AIzaSyBjXZMCTEd7yyWzkhzlvwZmiJbPN6lP88Q",
@@ -160,10 +204,7 @@
 
     function esc(str) {
       return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
   </script>
 </body>

@@ -74,22 +74,37 @@ Your widgets will be live at `https://your-project-id.web.app/`.
 
 ---
 
+## Themes
+
+All widgets support four themes via the `?theme=` URL parameter:
+
+| Theme | Description |
+|---|---|
+| `cyber` | Dark, blue-tinted, VT323 monospace — default |
+| `paper` | Light parchment, Georgia serif, warm brown accent |
+| `dusk` | Deep purple, lavender text, violet accent |
+| `moss` | Dark green, sage text, green accent |
+
+Append `?theme=paper` (or `dusk`, `moss`) to any widget URL to switch themes. No param defaults to `cyber`.
+
+---
+
 ## Embedding
 
 Each widget is a self-contained page designed to be embedded via `<iframe>`:
 
 ```html
 <!-- Visitor counter -->
-<iframe src="https://your-project-id.web.app/counter/" width="60" height="20" frameborder="0"></iframe>
+<iframe src="https://your-project-id.web.app/counter/?theme=cyber" width="60" height="20" frameborder="0"></iframe>
 
 <!-- Chat -->
-<iframe src="https://your-project-id.web.app/chat/" width="400" height="300" frameborder="0"></iframe>
+<iframe src="https://your-project-id.web.app/chat/?theme=cyber" width="400" height="300" frameborder="0"></iframe>
 
 <!-- News -->
-<iframe src="https://your-project-id.web.app/news/" width="400" height="80" frameborder="0"></iframe>
+<iframe src="https://your-project-id.web.app/news/?theme=cyber" width="400" height="80" frameborder="0"></iframe>
 
 <!-- Guestbook -->
-<iframe src="https://your-project-id.web.app/guestbook/" width="400" height="300" frameborder="0"></iframe>
+<iframe src="https://your-project-id.web.app/guestbook/?theme=cyber" width="400" height="300" frameborder="0"></iframe>
 ```
 
 All widgets have a transparent or semi-transparent background and use the [VT323](https://fonts.google.com/specimen/VT323) monospace font. They're designed to sit naturally over dark or textured site backgrounds.

@@ -7,14 +7,43 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg:     rgba(0, 0, 0, 0.55);
+      --border: rgba(184, 212, 240, 0.2);
+      --text:   #b8d4f0;
+      --font:   'VT323', monospace;
+      --size:   14px;
+    }
+    [data-theme="paper"] {
+      --bg:     rgba(250, 247, 242, 0.96);
+      --border: rgba(0, 0, 0, 0.1);
+      --text:   #2a2a2a;
+      --font:   Georgia, serif;
+      --size:   13px;
+    }
+    [data-theme="dusk"] {
+      --bg:     rgba(18, 10, 28, 0.88);
+      --border: rgba(200, 150, 255, 0.2);
+      --text:   #ddc8f5;
+      --font:   system-ui, sans-serif;
+      --size:   13px;
+    }
+    [data-theme="moss"] {
+      --bg:     rgba(8, 18, 10, 0.88);
+      --border: rgba(140, 200, 120, 0.2);
+      --text:   #a8c8a0;
+      --font:   system-ui, sans-serif;
+      --size:   13px;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
       height: 100%;
       background: transparent;
-      font-family: 'VT323', monospace;
-      font-size: 14px;
-      color: #b8d4f0;
+      font-family: var(--font);
+      font-size: var(--size);
+      color: var(--text);
     }
 
     #widget {
@@ -24,8 +53,8 @@
       gap: 8px;
       height: 100%;
       padding: 10px 12px;
-      background: rgba(0, 0, 0, 0.55);
-      border: 1px solid rgba(184, 212, 240, 0.2);
+      background: var(--bg);
+      border: 1px solid var(--border);
     }
 
     .item {
@@ -44,7 +73,7 @@
     }
 
     a {
-      color: #b8d4f0;
+      color: var(--text);
       text-decoration: none;
       overflow: hidden;
       display: -webkit-box;
@@ -52,7 +81,7 @@
       -webkit-box-orient: vertical;
     }
 
-    a:hover { text-decoration: underline; text-decoration-color: rgba(184, 212, 240, 0.5); }
+    a:hover { text-decoration: underline; opacity: 0.8; }
 
     .loading { opacity: 0.3; }
     .error   { opacity: 0.4; font-size: 12px; }
@@ -71,6 +100,8 @@
   </div>
 
   <script type="module">
+    document.documentElement.dataset.theme = new URLSearchParams(location.search).get('theme') || 'cyber';
+
     async function loadHN(index, elId) {
       const el = document.getElementById(elId);
       try {

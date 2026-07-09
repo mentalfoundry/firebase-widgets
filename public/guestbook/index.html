@@ -7,22 +7,79 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg:           rgba(0, 0, 0, 0.82);
+      --border:       rgba(184, 212, 240, 0.2);
+      --border-focus: rgba(184, 212, 240, 0.6);
+      --text:         #b8d4f0;
+      --accent:       #7eb8e8;
+      --input-bg:     rgba(184, 212, 240, 0.05);
+      --input-border: rgba(184, 212, 240, 0.25);
+      --btn-hover:    rgba(184, 212, 240, 0.12);
+      --scrollbar:    rgba(184, 212, 240, 0.2);
+      --divider:      rgba(184, 212, 240, 0.08);
+      --font:         'VT323', monospace;
+      --size:         14px;
+    }
+    [data-theme="paper"] {
+      --bg:           rgba(250, 247, 242, 0.96);
+      --border:       rgba(0, 0, 0, 0.1);
+      --border-focus: rgba(0, 0, 0, 0.4);
+      --text:         #2a2a2a;
+      --accent:       #5a3e28;
+      --input-bg:     rgba(0, 0, 0, 0.03);
+      --input-border: rgba(0, 0, 0, 0.15);
+      --btn-hover:    rgba(0, 0, 0, 0.06);
+      --scrollbar:    rgba(0, 0, 0, 0.15);
+      --divider:      rgba(0, 0, 0, 0.08);
+      --font:         Georgia, serif;
+      --size:         13px;
+    }
+    [data-theme="dusk"] {
+      --bg:           rgba(18, 10, 28, 0.88);
+      --border:       rgba(200, 150, 255, 0.2);
+      --border-focus: rgba(200, 150, 255, 0.6);
+      --text:         #ddc8f5;
+      --accent:       #c084fc;
+      --input-bg:     rgba(200, 150, 255, 0.05);
+      --input-border: rgba(200, 150, 255, 0.25);
+      --btn-hover:    rgba(200, 150, 255, 0.12);
+      --scrollbar:    rgba(200, 150, 255, 0.2);
+      --divider:      rgba(200, 150, 255, 0.08);
+      --font:         system-ui, sans-serif;
+      --size:         13px;
+    }
+    [data-theme="moss"] {
+      --bg:           rgba(8, 18, 10, 0.88);
+      --border:       rgba(140, 200, 120, 0.2);
+      --border-focus: rgba(140, 200, 120, 0.6);
+      --text:         #a8c8a0;
+      --accent:       #6db87a;
+      --input-bg:     rgba(140, 200, 120, 0.05);
+      --input-border: rgba(140, 200, 120, 0.25);
+      --btn-hover:    rgba(140, 200, 120, 0.12);
+      --scrollbar:    rgba(140, 200, 120, 0.2);
+      --divider:      rgba(140, 200, 120, 0.08);
+      --font:         system-ui, sans-serif;
+      --size:         13px;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
       height: 100%;
       background: transparent;
-      font-family: 'VT323', monospace;
-      font-size: 14px;
-      color: #b8d4f0;
+      font-family: var(--font);
+      font-size: var(--size);
+      color: var(--text);
     }
 
     #widget {
       display: flex;
       flex-direction: column;
       height: 100%;
-      background: rgba(0, 0, 0, 0.82);
-      border: 1px solid rgba(184, 212, 240, 0.2);
+      background: var(--bg);
+      border: 1px solid var(--border);
     }
 
     #entries {
@@ -34,61 +91,30 @@
       gap: 8px;
     }
 
-    .entry {
-      border-bottom: 1px solid rgba(184, 212, 240, 0.08);
-      padding-bottom: 8px;
-    }
+    .entry { border-bottom: 1px solid var(--divider); padding-bottom: 8px; }
+    .entry:last-child { border-bottom: none; padding-bottom: 0; }
 
-    .entry:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
+    .entry-header { display: flex; gap: 8px; align-items: baseline; margin-bottom: 2px; }
+    .entry-name   { color: var(--accent); }
+    .entry-date   { opacity: 0.35; font-size: 12px; }
+    .entry-message { line-height: 1.4; word-break: break-word; opacity: 0.85; }
 
-    .entry-header {
-      display: flex;
-      gap: 8px;
-      align-items: baseline;
-      margin-bottom: 2px;
-    }
+    #footer { border-top: 1px solid var(--border); padding: 6px 8px; }
 
-    .entry-name {
-      color: #7eb8e8;
-    }
+    #input-row { display: flex; gap: 4px; }
 
-    .entry-date {
-      opacity: 0.35;
-      font-size: 12px;
-    }
-
-    .entry-message {
-      line-height: 1.4;
-      word-break: break-word;
-      opacity: 0.85;
-    }
-
-    #footer {
-      border-top: 1px solid rgba(184, 212, 240, 0.2);
-      padding: 6px 8px;
-    }
-
-    #input-row {
-      display: flex;
-      gap: 4px;
-    }
-
-    input, textarea, button {
-      font-family: 'VT323', monospace;
-      font-size: 14px;
-      background: rgba(184, 212, 240, 0.05);
-      border: 1px solid rgba(184, 212, 240, 0.25);
-      color: #b8d4f0;
+    input, button {
+      font-family: var(--font);
+      font-size: var(--size);
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      color: var(--text);
       padding: 3px 6px;
       outline: none;
-      resize: none;
     }
 
-    input::placeholder, textarea::placeholder { opacity: 0.35; }
-    input:focus, textarea:focus { border-color: rgba(184, 212, 240, 0.6); }
+    input::placeholder { opacity: 0.35; }
+    input:focus { border-color: var(--border-focus); }
 
     #name-input    { width: 90px; flex-shrink: 0; }
     #message-input { flex: 1; min-width: 0; }
@@ -100,7 +126,7 @@
       flex-shrink: 0;
     }
 
-    button:hover:not(:disabled) { background: rgba(184, 212, 240, 0.12); }
+    button:hover:not(:disabled) { background: var(--btn-hover); }
     button:disabled { opacity: 0.35; cursor: default; }
 
     #signed-notice {
@@ -111,9 +137,9 @@
       padding: 2px 0;
     }
 
-    #entries::-webkit-scrollbar { width: 3px; }
+    #entries::-webkit-scrollbar       { width: 3px; }
     #entries::-webkit-scrollbar-track { background: transparent; }
-    #entries::-webkit-scrollbar-thumb { background: rgba(184, 212, 240, 0.2); }
+    #entries::-webkit-scrollbar-thumb { background: var(--scrollbar); }
   </style>
 </head>
 <body>
@@ -134,6 +160,8 @@
     import { getFirestore, collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp }
       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
+    document.documentElement.dataset.theme = new URLSearchParams(location.search).get('theme') || 'cyber';
+
     const firebaseConfig = {
       apiKey:            "AIzaSyBjXZMCTEd7yyWzkhzlvwZmiJbPN6lP88Q",
       authDomain:        "daznet.firebaseapp.com",
@@ -143,23 +171,21 @@
       appId:             "1:253374160314:web:098d00c868f0ff1b991183"
     };
 
-    const app        = initializeApp(firebaseConfig);
-    const db         = getFirestore(app);
-    const entriesEl  = document.getElementById('entries');
-    const nameEl     = document.getElementById('name-input');
-    const messageEl  = document.getElementById('message-input');
-    const signBtn    = document.getElementById('sign-btn');
-    const noticeEl   = document.getElementById('signed-notice');
-    const inputRow   = document.getElementById('input-row');
+    const app       = initializeApp(firebaseConfig);
+    const db        = getFirestore(app);
+    const entriesEl = document.getElementById('entries');
+    const nameEl    = document.getElementById('name-input');
+    const messageEl = document.getElementById('message-input');
+    const signBtn   = document.getElementById('sign-btn');
+    const noticeEl  = document.getElementById('signed-notice');
+    const inputRow  = document.getElementById('input-row');
 
-    // Restore name, lock form if already signed
     nameEl.value = localStorage.getItem('guestbook_name') || '';
     if (localStorage.getItem('guestbook_signed')) {
       inputRow.style.display = 'none';
       noticeEl.style.display = 'block';
     }
 
-    // Real-time entries — newest first
     const q = query(collection(db, 'guestbook'), orderBy('timestamp', 'desc'), limit(100));
 
     onSnapshot(q, (snap) => {
@@ -204,10 +230,7 @@
 
     function esc(str) {
       return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
   </script>
 </body>

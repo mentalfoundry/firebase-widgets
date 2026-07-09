@@ -7,6 +7,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --text: #b8d4f0;
+      --font: 'VT323', monospace;
+      --size: 13px;
+      --tracking: 0.06em;
+    }
+    [data-theme="paper"] { --text: #2a2a2a; --font: Georgia, serif;        --size: 12px; --tracking: 0.03em; }
+    [data-theme="dusk"]  { --text: #ddc8f5; --font: system-ui, sans-serif; --size: 12px; --tracking: 0.03em; }
+    [data-theme="moss"]  { --text: #a8c8a0; --font: system-ui, sans-serif; --size: 12px; --tracking: 0.03em; }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       background: transparent;
@@ -16,10 +26,10 @@
       align-items: center;
     }
     #count {
-      font-family: 'VT323', monospace;
-      font-size: 13px;
-      letter-spacing: 0.06em;
-      color: #b8d4f0;
+      font-family: var(--font);
+      font-size: var(--size);
+      letter-spacing: var(--tracking);
+      color: var(--text);
       line-height: 1;
       white-space: nowrap;
       transition: opacity 0.3s;
@@ -34,6 +44,8 @@
     import { initializeApp }    from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
     import { getFirestore, doc, getDoc, setDoc, updateDoc, increment }
       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    document.documentElement.dataset.theme = new URLSearchParams(location.search).get('theme') || 'cyber';
 
     const firebaseConfig = {
       apiKey:            "AIzaSyBjXZMCTEd7yyWzkhzlvwZmiJbPN6lP88Q",
@@ -52,21 +64,17 @@
 
     async function run() {
       try {
-        // Only count once per browser session (prevents refresh spam)
         if (!sessionStorage.getItem('visit_counted')) {
           try {
             await updateDoc(counterRef, { count: increment(1) });
           } catch (e) {
-            // Document doesn't exist yet — create it
             await setDoc(counterRef, { count: 1 });
           }
           sessionStorage.setItem('visit_counted', '1');
         }
-
         const snap = await getDoc(counterRef);
         if (snap.exists()) {
-          const n = snap.data().count;
-          countEl.textContent = String(n).padStart(6, '0');
+          countEl.textContent = String(snap.data().count).padStart(6, '0');
           countEl.classList.remove('loading');
         }
       } catch (err) {
